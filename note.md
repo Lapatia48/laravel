@@ -24,3 +24,16 @@ docker exec -it laravel_app php artisan migrate:fresh --seed
 
 # creation de controller:
 docker exec -it laravel_app php artisan make:controller CategoryController
+
+
+
+
+
+# Exécuter les migrations
+php artisan migrate
+
+# Exécuter les seeders
+php artisan db:seed
+
+# Ou pour réinitialiser complètement
+php artisan migrate:fresh --seed

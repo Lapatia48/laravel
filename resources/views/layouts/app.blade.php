@@ -342,6 +342,27 @@
                     </ul>
                 </li>
                 <li class="nav-item">
+                    <div class="nav-link has-children dropdownable {{ request()->routeIs('products.*') ? 'open' : '' }}" 
+                         id="productsMenu">
+                        Produits
+                    </div>
+                    <ul class="sub-nav {{ request()->routeIs('products.*') ? 'active' : '' }}" 
+                        id="productsSubMenu">
+                        <li class="nav-item">
+                            <a href="{{ route('products.index') }}" 
+                               class="nav-link {{ request()->routeIs('products.index') ? 'active' : '' }}">
+                                Liste des produits
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('products.create') }}" 
+                               class="nav-link {{ request()->routeIs('products.create') ? 'active' : '' }}">
+                                Créer un produit
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
                     <a href="{{ url('/about') }}" class="nav-link {{ request()->is('about') ? 'active' : '' }}">
                         À propos
                     </a>
@@ -461,6 +482,51 @@
                 }
             });
         }
+
+        // Menu déroulant Produits
+        const productsMenu = document.getElementById('productsMenu');
+        const productsSubMenu = document.getElementById('productsSubMenu');
+        
+        if (productsMenu && productsSubMenu) {
+            // Garder ouvert si on est sur une page produit
+            const isProductPage = window.location.pathname.includes('/products');
+            if (isProductPage) {
+                productsSubMenu.classList.add('active');
+                productsMenu.classList.add('open');
+            }
+            
+            // Toggle manuel
+            productsMenu.addEventListener('click', function(e) {
+                const isOpen = productsSubMenu.classList.contains('active');
+                productsSubMenu.classList.toggle('active', !isOpen);
+                productsMenu.classList.toggle('open', !isOpen);
+                e.stopPropagation();
+            });
+            
+            // Fermer en cliquant ailleurs
+            document.addEventListener('click', function(e) {
+                if (productsMenu && productsSubMenu && 
+                    !productsMenu.contains(e.target) && 
+                    !productsSubMenu.contains(e.target)) {
+                    // Ne pas fermer si on est sur une page produit
+                    if (!window.location.pathname.includes('/products')) {
+                        productsSubMenu.classList.remove('active');
+                        productsMenu.classList.remove('open');
+                    }
+                }
+            });
+            
+            // Garder ouvert si on clique sur un lien enfant
+            productsSubMenu.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    e.stopPropagation();
+                    // Fermer sidebar sur mobile
+                    if (window.innerWidth <= 768) {
+                        document.querySelector('.sidebar').classList.remove('active');
+                    }
+                }
+            });
+        }
         
         // Fermer sidebar mobile quand on clique sur un lien
         document.querySelectorAll('.nav-link').forEach(link => {
@@ -477,6 +543,12 @@
                 const isCategoryPage = window.location.pathname.includes('/categories');
                 categoriesSubMenu.classList.toggle('active', isCategoryPage);
                 categoriesMenu.classList.toggle('open', isCategoryPage);
+            }
+            
+            if (productsMenu && productsSubMenu) {
+                const isProductPage = window.location.pathname.includes('/products');
+                productsSubMenu.classList.toggle('active', isProductPage);
+                productsMenu.classList.toggle('open', isProductPage);
             }
         });
     </script>

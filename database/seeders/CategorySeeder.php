@@ -14,36 +14,43 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             [
-                'name' => 'Technologie',
-                'slug' => 'technologie',
-                'description' => "Articles sur la technologie et l'innovation",
+                'name' => 'Fruits',
+                'slug' => 'fruits',
+                'description' => 'Fruits frais de saison et exotiques',
                 'is_active' => true
             ],
             [
-                'name' => 'Science',
-                'slug' => 'science',
-                'description' => 'Découvertes scientifiques et recherches',
+                'name' => 'Légumes',
+                'slug' => 'legumes',
+                'description' => 'Légumes bio et locaux',
+                'is_active' => true
+            ],
+            [
+                'name' => 'Vêtements',
+                'slug' => 'vetements',
+                'description' => 'Vêtements pour hommes, femmes et enfants',
                 'is_active' => true
             ],
             [
                 'name' => 'Sport',
                 'slug' => 'sport',
-                'description' => 'Actualités sportives',
+                'description' => 'Équipements et accessoires sportifs',
                 'is_active' => true
             ],
             [
-                'name' => 'Culture',
-                'slug' => 'culture',
-                'description' => 'Arts, musique et culture',
+                'name' => 'Technologie',
+                'slug' => 'technologie',
+                'description' => 'Appareils électroniques et informatiques',
                 'is_active' => true
             ],
             [
-                'name' => 'Économie',
-                'slug' => 'economie',
-                'description' => 'Actualités économiques et financières',
+                'name' => 'Électronique',
+                'slug' => 'electronique',
+                'description' => 'Appareils électroniques et gadgets',
                 'is_active' => true
             ]
         ];
+        
         foreach ($categories as $category) {
             Category::create($category);
         }

@@ -6,7 +6,7 @@
 @section('content')
     <div class="container">
         <div class="form-card">
-            <h1>✏️ Modifier la catégorie</h1>
+            <h1>Modifier la catégorie</h1>
             
             <form method="POST" action="{{ route('categories.update', $category) }}">
                 @csrf

@@ -13,12 +13,59 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         // Récupère tous les produits avec leurs catégories
-        $products = Product::with('category')->paginate(10);
+        $query = Product::with('category');
         
-        return view('products.index', compact('products'));
+        // Filtre par catégorie
+        if ($request->filled('category')) {
+            $query->whereHas('category', function($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
+        }
+        
+        // Recherche par nom
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+        
+        // Tri par prix
+        if ($request->filled('sort')) {
+            if ($request->sort == 'price_asc') {
+                $query->orderBy('price', 'asc');
+            } elseif ($request->sort == 'price_desc') {
+                $query->orderBy('price', 'desc');
+            } elseif ($request->sort == 'name_asc') {
+                $query->orderBy('name', 'asc');
+            } elseif ($request->sort == 'name_desc') {
+                $query->orderBy('name', 'desc');
+            } elseif ($request->sort == 'newest') {
+                $query->orderBy('created_at', 'desc');
+            } elseif ($request->sort == 'oldest') {
+                $query->orderBy('created_at', 'asc');
+            }
+        } else {
+            // Tri par défaut
+            $query->orderBy('created_at', 'desc');
+        }
+        
+        $products = $query->paginate(12);
+        
+        // Récupère toutes les catégories avec le nombre de produits
+        $categories = Category::withCount('products')->get();
+        
+        // Récupère la catégorie active si filtrée
+        $activeCategory = null;
+        if ($request->filled('category')) {
+            $activeCategory = Category::where('slug', $request->category)->first();
+        }
+        
+        return view('products.index', compact('products', 'categories', 'activeCategory'));
     }
 
     /**

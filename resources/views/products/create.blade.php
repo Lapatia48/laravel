@@ -51,7 +51,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="price">Prix (€) *</label>
+                    <label for="price">Prix (Ar) *</label>
                     <input type="number" 
                            name="price" 
                            id="price" 

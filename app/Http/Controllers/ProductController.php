@@ -10,22 +10,18 @@ use App\Http\Requests\UpdateProductRequest;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        // Récupère tous les produits avec leurs catégories
-        $query = Product::with('category');
+        $query = Product::with(['category' => function($query) {
+            $query->select('id', 'name', 'slug', 'is_active');
+        }]);
         
-        // Filtre par catégorie
         if ($request->filled('category')) {
             $query->whereHas('category', function($q) use ($request) {
                 $q->where('slug', $request->category);
             });
         }
         
-        // Recherche par nom
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -34,7 +30,6 @@ class ProductController extends Controller
             });
         }
         
-        // Tri par prix
         if ($request->filled('sort')) {
             if ($request->sort == 'price_asc') {
                 $query->orderBy('price', 'asc');
@@ -50,44 +45,37 @@ class ProductController extends Controller
                 $query->orderBy('created_at', 'asc');
             }
         } else {
-            // Tri par défaut
             $query->orderBy('created_at', 'desc');
         }
         
         $products = $query->paginate(12);
         
-        // Récupère toutes les catégories avec le nombre de produits
-        $categories = Category::withCount('products')->get();
+        $categories = Category::withCount(['products' => function($query) {
+        }])->get(['id', 'name', 'slug', 'is_active']);
         
-        // Récupère la catégorie active si filtrée
         $activeCategory = null;
         if ($request->filled('category')) {
-            $activeCategory = Category::where('slug', $request->category)->first();
+            $activeCategory = Category::where('slug', $request->category)
+                ->select('id', 'name', 'slug', 'description')
+                ->first();
         }
         
         return view('products.index', compact('products', 'categories', 'activeCategory'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        // Récupère toutes les catégories actives
-        $categories = Category::where('is_active', true)->get();
+        $categories = Category::where('is_active', true)
+            ->select('id', 'name')
+            ->get();
         
         return view('products.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreProductRequest $request)
     {
-        // Validation effectuée dans StoreProductRequest
         $validated = $request->validated();
         
-        // S'assurer que is_active est bien un boolean
         $validated['is_active'] = (bool) $request->input('is_active', false);
         
         Product::create($validated);
@@ -96,37 +84,32 @@ class ProductController extends Controller
             ->with('success', 'Produit créé avec succès !');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Product $product)
     {
-        // Charge la catégorie avec le produit
-        $product->load('category');
+        $product->load(['category' => function($query) {
+            $query->select('id', 'name', 'slug', 'description');
+        }]);
         
         return view('products.show', compact('product'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Product $product)
     {
-        // Récupère toutes les catégories actives
-        $categories = Category::where('is_active', true)->get();
+        $product->load(['category' => function($query) {
+            $query->select('id', 'name');
+        }]);
+        
+        $categories = Category::where('is_active', true)
+            ->select('id', 'name')
+            ->get();
         
         return view('products.edit', compact('product', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        // Validation effectuée dans UpdateProductRequest
         $validated = $request->validated();
         
-        // S'assurer que is_active est bien un boolean
         $validated['is_active'] = (bool) $request->input('is_active', false);
         
         $product->update($validated);
@@ -135,9 +118,6 @@ class ProductController extends Controller
             ->with('success', 'Produit mis à jour avec succès !');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Product $product)
     {
         $product->delete();

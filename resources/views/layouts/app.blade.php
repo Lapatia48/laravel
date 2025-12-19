@@ -306,7 +306,6 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar Navigation -->
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-title">Laravel Admin</div>
@@ -392,15 +391,12 @@
         </div>
     </aside>
     
-    <!-- Main Content -->
     <div class="main-content">
-        <!-- Header -->
         <header class="header">
             <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
             <h1 class="page-title">@yield('page-title', 'Tableau de bord')</h1>
         </header>
         
-        <!-- Main Content Area -->
         <main class="content">
             @if(session('success'))
                 <div class="alert alert-success">
@@ -417,7 +413,6 @@
             @yield('content')
         </main>
         
-        <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
                 <div class="copyright">
@@ -433,24 +428,20 @@
     </div>
     
     <script>
-        // Sidebar mobile toggle
         function toggleSidebar() {
             document.querySelector('.sidebar').classList.toggle('active');
         }
 
-        // Menu déroulant Catégories
         const categoriesMenu = document.getElementById('categoriesMenu');
         const categoriesSubMenu = document.getElementById('categoriesSubMenu');
         
         if (categoriesMenu && categoriesSubMenu) {
-            // Garder ouvert si on est sur une page catégorie
             const isCategoryPage = window.location.pathname.includes('/categories');
             if (isCategoryPage) {
                 categoriesSubMenu.classList.add('active');
                 categoriesMenu.classList.add('open');
             }
             
-            // Toggle manuel
             categoriesMenu.addEventListener('click', function(e) {
                 const isOpen = categoriesSubMenu.classList.contains('active');
                 categoriesSubMenu.classList.toggle('active', !isOpen);
@@ -458,12 +449,10 @@
                 e.stopPropagation();
             });
             
-            // Fermer en cliquant ailleurs
             document.addEventListener('click', function(e) {
                 if (categoriesMenu && categoriesSubMenu && 
                     !categoriesMenu.contains(e.target) && 
                     !categoriesSubMenu.contains(e.target)) {
-                    // Ne pas fermer si on est sur une page catégorie
                     if (!window.location.pathname.includes('/categories')) {
                         categoriesSubMenu.classList.remove('active');
                         categoriesMenu.classList.remove('open');
@@ -471,11 +460,9 @@
                 }
             });
             
-            // Garder ouvert si on clique sur un lien enfant
             categoriesSubMenu.addEventListener('click', function(e) {
                 if (e.target.tagName === 'A') {
                     e.stopPropagation();
-                    // Fermer sidebar sur mobile
                     if (window.innerWidth <= 768) {
                         document.querySelector('.sidebar').classList.remove('active');
                     }
@@ -483,19 +470,16 @@
             });
         }
 
-        // Menu déroulant Produits
         const productsMenu = document.getElementById('productsMenu');
         const productsSubMenu = document.getElementById('productsSubMenu');
         
         if (productsMenu && productsSubMenu) {
-            // Garder ouvert si on est sur une page produit
             const isProductPage = window.location.pathname.includes('/products');
             if (isProductPage) {
                 productsSubMenu.classList.add('active');
                 productsMenu.classList.add('open');
             }
             
-            // Toggle manuel
             productsMenu.addEventListener('click', function(e) {
                 const isOpen = productsSubMenu.classList.contains('active');
                 productsSubMenu.classList.toggle('active', !isOpen);
@@ -503,12 +487,10 @@
                 e.stopPropagation();
             });
             
-            // Fermer en cliquant ailleurs
             document.addEventListener('click', function(e) {
                 if (productsMenu && productsSubMenu && 
                     !productsMenu.contains(e.target) && 
                     !productsSubMenu.contains(e.target)) {
-                    // Ne pas fermer si on est sur une page produit
                     if (!window.location.pathname.includes('/products')) {
                         productsSubMenu.classList.remove('active');
                         productsMenu.classList.remove('open');
@@ -516,11 +498,9 @@
                 }
             });
             
-            // Garder ouvert si on clique sur un lien enfant
             productsSubMenu.addEventListener('click', function(e) {
                 if (e.target.tagName === 'A') {
                     e.stopPropagation();
-                    // Fermer sidebar sur mobile
                     if (window.innerWidth <= 768) {
                         document.querySelector('.sidebar').classList.remove('active');
                     }
@@ -528,7 +508,6 @@
             });
         }
         
-        // Fermer sidebar mobile quand on clique sur un lien
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', function() {
                 if (window.innerWidth <= 768) {
@@ -537,7 +516,6 @@
             });
         });
         
-        // Fermer dropdown en changeant de page (pour navigation normale)
         window.addEventListener('popstate', function() {
             if (categoriesMenu && categoriesSubMenu) {
                 const isCategoryPage = window.location.pathname.includes('/categories');

@@ -13,7 +13,7 @@
             
             <div class="contact-info">
                 <div class="info-item">
-                    <div class="info-icon">📧</div>
+                    <div class="info-icon"></div>
                     <div class="info-content">
                         <h3>Email</h3>
                         <p>{{ $email }}</p>
@@ -21,7 +21,7 @@
                 </div>
                 
                 <div class="info-item">
-                    <div class="info-icon">📍</div>
+                    <div class="info-icon"></div>
                     <div class="info-content">
                         <h3>Adresse</h3>
                         <p>123 Rue du Marketplace<br>75000 Paris, France</p>
@@ -29,7 +29,7 @@
                 </div>
                 
                 <div class="info-item">
-                    <div class="info-icon">📞</div>
+                    <div class="info-icon"></div>
                     <div class="info-content">
                         <h3>Téléphone</h3>
                         <p>+33 1 23 45 67 89</p>

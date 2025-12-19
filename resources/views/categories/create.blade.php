@@ -6,7 +6,7 @@
 @section('content')
     <div class="container">
         <div class="form-card">
-            <h1>➕ Ajouter une catégorie</h1>
+            <h1>Ajouter une catégorie</h1>
             
             <form method="POST" action="{{ route('categories.store') }}">
                 @csrf

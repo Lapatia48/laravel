@@ -6,7 +6,7 @@
 @section('content')
     <div class="marketplace-container">
         <div class="marketplace-header">
-            <h1>📦 Marketplace Products</h1>
+            <h1>Marketplace Products</h1>
             <p class="marketplace-subtitle">
                 @if(count($products) > 0)
                     {{ $products->total() }} produit(s) disponible(s)
@@ -19,10 +19,8 @@
             </p>
         </div>
         
-        <!-- Filtres et Recherche -->
         <div class="filters-section">
             <div class="filters-container">
-                <!-- Formulaire de recherche -->
                 <form method="GET" action="{{ route('products.index') }}" class="search-form">
                     <div class="search-input-group">
                         <input type="text" 
@@ -36,9 +34,7 @@
                     </div>
                 </form>
                 
-                <!-- Filtres et Tris -->
                 <div class="filters-row">
-                    <!-- Filtre par catégorie -->
                     <div class="filter-group">
                         <span class="filter-label">Catégorie :</span>
                         <div class="category-filters">
@@ -55,7 +51,6 @@
                         </div>
                     </div>
                     
-                    <!-- Tri des produits -->
                     <div class="filter-group">
                         <span class="filter-label">Trier par :</span>
                         <form method="GET" action="{{ route('products.index') }}" class="sort-form">
@@ -84,18 +79,16 @@
                     </div>
                 </div>
                 
-                <!-- Reset filters -->
                 @if(request()->filled('category') || request()->filled('search') || request()->filled('sort'))
                     <div class="reset-filters">
                         <a href="{{ route('products.index') }}" class="reset-link">
-                            ✖ Réinitialiser tous les filtres
+                            Réinitialiser tous les filtres
                         </a>
                     </div>
                 @endif
             </div>
         </div>
         
-        <!-- Affichage des résultats -->
         @if(request()->filled('search') && count($products) > 0)
             <div class="search-results-info">
                 <p>Résultats pour "<strong>{{ request('search') }}</strong>" : {{ $products->total() }} produit(s) trouvé(s)</p>
@@ -161,7 +154,7 @@
                 </div>
             @empty
                 <div class="empty-state">
-                    <div class="empty-state-icon">📦</div>
+                    <div class="empty-state-icon"></div>
                     <h3>Aucun produit trouvé</h3>
                     <p>
                         @if(request()->filled('search'))
@@ -181,7 +174,6 @@
             @endforelse
         </div>
         
-        <!-- Pagination -->
         @if($products->hasPages())
             <div class="pagination">
                 {{ $products->appends(request()->query())->links() }}

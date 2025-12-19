@@ -76,7 +76,7 @@
         }
         
         .features li:before {
-            content: "✓";
+            content: "•";
             color: #3498db;
             font-weight: bold;
         }

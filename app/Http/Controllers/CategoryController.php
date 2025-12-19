@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -6,20 +7,25 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    // Affiche la liste des catégories
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::withCount('products')
+            ->with(['products' => function($query) {
+                $query->select('id', 'name', 'price', 'category_id', 'is_active')
+                    ->where('is_active', true)
+                    ->limit(5);
+            }])
+            ->orderBy('name')
+            ->get();
+        
         return view('categories.index', ['categories' => $categories]);
     }
 
-    // Affiche le formulaire de création
     public function create()
     {
         return view('categories.create');
     }
 
-    // Enregistre une nouvelle catégorie
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -29,7 +35,6 @@ class CategoryController extends Controller
             'is_active' => 'required|boolean',
         ]);
         
-        // S'assurer que is_active est bien un boolean
         $validated['is_active'] = (bool) $request->input('is_active', false);
         
         Category::create($validated);
@@ -38,19 +43,21 @@ class CategoryController extends Controller
             ->with('success', 'Catégorie créée avec succès !');
     }
 
-    // Affiche une catégorie spécifique (READ)
     public function show(Category $category)
     {
+        $category->load(['products' => function($query) {
+            $query->select('id', 'name', 'slug', 'price', 'description', 'is_active', 'created_at')
+                ->orderBy('created_at', 'desc');
+        }]);
+        
         return view('categories.show', ['category' => $category]);
     }
 
-    // Affiche le formulaire d'édition
     public function edit(Category $category)
     {
         return view('categories.edit', ['category' => $category]);
     }
 
-    // Met à jour une catégorie
     public function update(Request $request, Category $category)
     {
         $validated = $request->validate([
@@ -60,7 +67,6 @@ class CategoryController extends Controller
             'is_active' => 'required|boolean',
         ]);
         
-        // S'assurer que is_active est bien un boolean
         $validated['is_active'] = (bool) $request->input('is_active', false);
         
         $category->update($validated);
@@ -69,7 +75,6 @@ class CategoryController extends Controller
             ->with('success', 'Catégorie mise à jour avec succès !');
     }
 
-    // Supprime une catégorie
     public function destroy(Category $category)
     {
         $category->delete();

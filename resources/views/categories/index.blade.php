@@ -6,7 +6,7 @@
 @section('content')
     <div class="marketplace-container">
         <div class="marketplace-header">
-            <h1>📁 Marketplace Categories</h1>
+            <h1>Marketplace Categories</h1>
             <p class="marketplace-subtitle">
                 @if(count($categories) > 0)
                     {{ count($categories) }} catégorie(s) disponible(s)
@@ -64,7 +64,7 @@
                 </div>
             @empty
                 <div class="empty-state">
-                    <div class="empty-state-icon">📁</div>
+                    <div class="empty-state-icon"></div>
                     <h3>Aucune catégorie trouvée</h3>
                     <p>Commencez par ajouter votre première catégorie à votre marketplace</p>
                 </div>
